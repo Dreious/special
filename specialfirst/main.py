@@ -29,8 +29,8 @@ def run_scenarios():
                 "Market_value": 150000,
                 "Location": 3, # Orta/Kötü
                 "Asset": 20000,
-                "Income": 25000,
-                "Interest": 15 # Yüksek
+                "Income": 15000,
+                "Interest": 8 # Yüksek
             }
         },
         {
@@ -39,8 +39,8 @@ def run_scenarios():
                 "Market_value": 400000,
                 "Location": 5, # Orta
                 "Asset": 150000,
-                "Income": 70000,
-                "Interest": 10 # Orta
+                "Income": 35000,
+                "Interest": 5 # Orta
             }
         },
         {
@@ -49,8 +49,8 @@ def run_scenarios():
                 "Market_value": 850000,
                 "Location": 9, # Mükemmel
                 "Asset": 800000,
-                "Income": 180000,
-                "Interest": 5 # Düşük
+                "Income": 80000,
+                "Interest": 2.5 # Düşük
             }
         },
         {
@@ -59,8 +59,8 @@ def run_scenarios():
                 "Market_value": 600000,
                 "Location": 8, # Mükemmel
                 "Asset": 900000,
-                "Income": 30000, # Düşük
-                "Interest": 8 # Düşük/Orta
+                "Income": 15000, # Düşük
+                "Interest": 3 # Düşük/Orta
             }
         },
         {
@@ -69,8 +69,8 @@ def run_scenarios():
                 "Market_value": 300000,
                 "Location": 6, # Orta/İyi
                 "Asset": 30000, # Düşük
-                "Income": 150000, # Yüksek
-                "Interest": 12 # Orta
+                "Income": 75000, # Yüksek
+                "Interest": 6 # Orta
             }
         }
     ]
@@ -87,7 +87,7 @@ def run_scenarios():
             print(f"  {k:12}: {formatted_val}")
         
         try:
-            results = calculate_credit(sc['inputs'])
+            results = calculate_credit(sc['inputs'].copy())
             
             print("\nSonuçlar:")
             print(f"  Ev Puanı         : {results['House_Score']:.2f} / 10")
