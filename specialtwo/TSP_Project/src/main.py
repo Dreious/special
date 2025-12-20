@@ -37,7 +37,10 @@ def main():
     visualizer = TSPVisualizer(cities)
     
     # 2. 5 FARKLI BAŞLANGIÇ ŞEHRİ
-    start_cities = [0, 5, 10, 15, 20]  # Örnek şehirler - verimiz 25 şehir olduğu için bunlar geçerli
+    n_cities = len(cities)
+    # Şehir sayısına göre başlangıç şehirlerini ayarla
+    start_cities = [0, n_cities//5, 2*n_cities//5, 3*n_cities//5, 4*n_cities//5]
+    print(f"\n📍 Toplam {n_cities} şehir, başlangıç şehirleri: {start_cities}")
     
     results = {}
     

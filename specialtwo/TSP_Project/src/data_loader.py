@@ -26,8 +26,18 @@ class TSPDataLoader:
         if not os.path.exists(self.city_file):
             raise FileNotFoundError(f"Dosya bulunamadı: {self.city_file}")
             
-        # cityData.txt formatı: CityID, X_Coordinate, Y_Coordinate
-        self.cities = pd.read_csv(self.city_file)
+        # cityData.txt formatı: ID X Y (boşlukla ayrılmış, başlık yok)
+        cities_data = []
+        with open(self.city_file, 'r') as f:
+            for line in f:
+                parts = line.strip().split()
+                if len(parts) >= 3:
+                    city_id = int(parts[0])
+                    x = float(parts[1])
+                    y = float(parts[2])
+                    cities_data.append([city_id, x, y])
+        
+        self.cities = pd.DataFrame(cities_data, columns=['CityID', 'X_Coordinate', 'Y_Coordinate'])
         print(f"✓ {len(self.cities)} şehir yüklendi")
         return self.cities
     
@@ -36,25 +46,32 @@ class TSPDataLoader:
         if not os.path.exists(self.distance_file):
             raise FileNotFoundError(f"Dosya bulunamadı: {self.distance_file}")
 
-        # intercityDistance.txt formatı: City1, City2, Distance
-        distances = pd.read_csv(self.distance_file)
-        
         if self.cities is None:
             self.load_cities()
             
-        # Mesafe matrisini oluştur
         n_cities = len(self.cities)
-        self.distance_matrix = np.zeros((n_cities, n_cities))
         
-        for _, row in distances.iterrows():
-            city1 = int(row['City1']) - 1  # 0-indexed
-            city2 = int(row['City2']) - 1
-            distance = float(row['Distance'])
-            
-            self.distance_matrix[city1][city2] = distance
-            self.distance_matrix[city2][city1] = distance  # Simetrik matris
+        # intercityDistance.txt formatı: tam mesafe matrisi (boşlukla ayrılmış)
+        # Her satır bir şehrin diğer tüm şehirlere mesafelerini içerir
+        distance_rows = []
+        with open(self.distance_file, 'r') as f:
+            for line in f:
+                # Boşlukları temizle ve sayıları ayır
+                parts = line.strip().split()
+                if parts:
+                    row = [float(val) for val in parts]
+                    distance_rows.append(row)
         
-        print(f"✓ Mesafe matrisi oluşturuldu ({n_cities}x{n_cities})")
+        self.distance_matrix = np.array(distance_rows)
+        
+        # Matrisin boyutunu kontrol et
+        if self.distance_matrix.shape[0] != n_cities or self.distance_matrix.shape[1] != n_cities:
+            print(f"⚠ Uyarı: Mesafe matrisi boyutu ({self.distance_matrix.shape}) şehir sayısıyla ({n_cities}) eşleşmiyor")
+            # Matris boyutunu şehir sayısına göre ayarla (eğer matris daha büyükse)
+            if self.distance_matrix.shape[0] >= n_cities and self.distance_matrix.shape[1] >= n_cities:
+                self.distance_matrix = self.distance_matrix[:n_cities, :n_cities]
+        
+        print(f"✓ Mesafe matrisi oluşturuldu ({self.distance_matrix.shape[0]}x{self.distance_matrix.shape[1]})")
         return self.distance_matrix
     
     def get_city_coordinates(self):
