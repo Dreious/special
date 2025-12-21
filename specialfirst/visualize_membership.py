@@ -18,19 +18,11 @@ def plot_membership_functions():
         'Credit': credit
     }
     
-    # Determine layout
-    num_vars = len(variables)
-    cols = 2
-    rows = (num_vars + 1) // cols
-    
-    fig, axes = plt.subplots(rows, cols, figsize=(15, 4 * rows))
-    axes = axes.flatten()
-    
-    for i, (var_name, var_data) in enumerate(variables.items()):
-        ax = axes[i]
+    for var_name, var_data in variables.items():
+        # Create a new figure for each variable
+        fig, ax = plt.subplots(figsize=(10, 6))
         
         # Generate x values
-        # Use numpy for smoother plotting
         x = np.linspace(var_data['min'], var_data['max'], 500)
         
         for set_name, set_data in var_data['sets'].items():
@@ -41,22 +33,20 @@ def plot_membership_functions():
             # Fill under the curve for better visualization
             ax.fill_between(x, y, alpha=0.1)
             
-        ax.set_title(f'Variable: {var_name}')
+        ax.set_title(f'Membership Functions: {var_name}')
         ax.set_xlabel('Value')
         ax.set_ylabel('Membership Degree')
         ax.legend()
         ax.grid(True, alpha=0.3)
         ax.set_ylim(-0.05, 1.05)
         
-    # Hide empty subplots if any
-    for j in range(i + 1, len(axes)):
-        fig.delaxes(axes[j])
-        
-    plt.tight_layout()
-    output_file = "membership_functions.png"
-    plt.savefig(output_file)
-    print(f"Graph saved to {output_file}")
-    # plt.show() # Commented out for headless environment
+        plt.tight_layout()
+        output_file = f"membership_{var_name.lower()}.png"
+        plt.savefig(output_file)
+        plt.close(fig)  # Close the figure to free memory
+        print(f"Graph saved to {output_file}")
+    
+    print(f"\nAll {len(variables)} membership function graphs have been saved.")
 
 if __name__ == "__main__":
     plot_membership_functions()

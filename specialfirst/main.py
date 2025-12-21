@@ -20,8 +20,6 @@ def format_input_display(key, value):
     return str(value)
 
 def run_scenarios():
-    # system = CreditEvaluationSystem() # Removed OOP instantiation
-
     scenarios = [
         {
             "name": "Senaryo 1: Düşük Profil (Öğrenci/Giriş Seviyesi)",
@@ -95,11 +93,6 @@ def run_scenarios():
             
             # Format Credit Amount using the helper
             credit_val = results['Credit_Amount']
-            # We use the raw value for the helper, so no :,.2f inside the call
-            # But the helper does .0f or .1f. For detailed credit amount, user usually likes cents.
-            # Let's keep the user request style: "600 Bin Dolar"
-            # But specific amount might be 459,784.33
-            # Let's do: $459,784.33 (460 Bin Dolar)
             
             credit_text = format_number_text(credit_val)
             print(f"  KREDİ MİKTARI    : ${credit_val:,.2f} ({credit_text} Dolar)")

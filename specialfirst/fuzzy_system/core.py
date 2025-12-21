@@ -1,6 +1,3 @@
-
-
-
 def linspace(start, stop, num=50):
     if num == 1:
         return [start]
